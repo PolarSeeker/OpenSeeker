@@ -10,6 +10,13 @@
   <a href="https://huggingface.co/OpenSeeker/OpenSeeker-v1-30B-SFT">
     <img src="https://img.shields.io/badge/HuggingFace-OpenSeeker__v1__30B__SFT-yellow" alt="HF Models"/>
   </a>
+  <a href="https://huggingface.co/PolarSeeker/OpenSeeker-v2-30B-SFT">
+    <img src="https://img.shields.io/badge/HuggingFace-OpenSeeker__v2__30B__SFT-yellow" alt="HF Models"/>
+  </a>
+</div>
+
+<div align="center">
+  <img src="assets/OpenSeekerv2.png" alt="Benchmark Results" width="800"/>
 </div>
 
 <div align="center">
@@ -18,8 +25,10 @@
 
 ## 📰 News
 
-- **2026.03.20** 📣 We’ve released a new batch of higher-quality, more challenging data. For details, please contact us at yr991129@sjtu.edu.cn.
-- **2026.03.17** 🚀 We open-sourced OpenSeeker-v1 (all data and models). Using **11.7K** training examples, we fine-tuned Qwen3-30B-A3B-Thinking-2507 and achieved scores of **48.4** on BrowseComp-ZH, **29.5** on BrowseComp, **74.0** on xbench-DeepSearch, and **59.4** on WideSearch.
+- **2026.05.06** 📣 Our OpenSeeker-v2 achieves state-of-the-art performance across four benchmarks among 30B-scale ReAct-based search agents with simple SFT: **46.0%** on BrowseComp, **58.1%** on BrowseComp-ZH, **34.6%** on Humanity’s Last Exam, and **78.0%** on xbench, surpassing even Tongyi DeepResearch, which is trained with a heavy CPT+SFT+RL pipeline. Our code is coming soon!
+
+
+- **2026.03.17** 🚀 We open-sourced OpenSeeker-v1 (all data and models). Using **11.7K** training examples, we fine-tuned Qwen3-30B-A3B-Thinking-2507 and achieved scores of **48.4%** on BrowseComp-ZH, **29.5%** on BrowseComp, **74.0%** on xbench-DeepSearch, and **59.4%** on WideSearch.
 
 ## Overview
 
