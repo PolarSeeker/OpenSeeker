@@ -2,7 +2,10 @@
 
 <div align="center">
   <a href="https://huggingface.co/papers/2603.15594">
-    <img src="https://img.shields.io/badge/arXiv-2603.15594-b31b1b" alt="arXiv"/>
+    <img src="https://img.shields.io/badge/Arxiv-OpenSeeker--v1-b31b1b" alt="Arxiv · OpenSeeker-v1"/>
+  </a>
+  <a href="https://arxiv.org/pdf/2605.04036">
+    <img src="https://img.shields.io/badge/Arxiv-OpenSeeker--v2-b31b1b" alt="Arxiv · OpenSeeker-v2"/>
   </a>
   <a href="https://huggingface.co/datasets/OpenSeeker/OpenSeeker-v1-Data">
     <img src="https://img.shields.io/badge/HuggingFace-OpenSeeker__v1__Data-orange" alt="HF Dataset"/>
