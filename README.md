@@ -128,14 +128,18 @@ OpenSeeker/
 If you find OpenSeeker useful in your research, please consider citing:
 
 ```bibtex
-@misc{du2026openseekerdemocratizingfrontiersearch,
-  title        = {OpenSeeker: Democratizing Frontier Search Agents by Fully Open-Sourcing Training Data},
-  author       = {Yuwen Du and Rui Ye and Shuo Tang and Xinyu Zhu and Yijun Lu and Yuzhu Cai and Siheng Chen},
-  year         = {2026},
-  eprint       = {2603.15594},
-  archivePrefix= {arXiv},
-  primaryClass = {cs.AI},
-  url          = {https://arxiv.org/abs/2603.15594},
+@article{du2026openseeker,
+  title={OpenSeeker: Democratizing Frontier Search Agents by Fully Open-Sourcing Training Data},
+  author={Du, Yuwen and Ye, Rui and Tang, Shuo and Zhu, Xinyu and Lu, Yijun and Cai, Yuzhu and Chen, Siheng},
+  journal={arXiv preprint arXiv:2603.15594},
+  year={2026}
+}
+
+@article{du2026openseekerv2,
+  title={OpenSeeker-v2: Pushing the Limits of Search Agents with Informative and High-Difficulty Trajectories},
+  author={Du, Yuwen and Ye, Rui and Tang, Shuo and Huang, Keduan and Zhu, Xinyu and Cai, Yuzhu and Chen, Siheng},
+  journal={arXiv preprint arXiv:2605.04036},
+  year={2026}
 }
 ```
 
