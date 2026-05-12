@@ -73,7 +73,7 @@ brew install git-xet
 git xet install
 
 # 2. Clone the OpenSeeker model repository
-git clone https://huggingface.co/OpenSeeker/OpenSeeker-v1-30B-SFT
+git clone https://huggingface.co/PolarSeeker/OpenSeeker-v1-30B-SFT
 
 # 3. Set MODEL_PATH in run_openseeker.sh to the downloaded model directory
 # Edit run_openseeker.sh and set MODEL_PATH="OpenSeeker-v1-30B-SFT"
