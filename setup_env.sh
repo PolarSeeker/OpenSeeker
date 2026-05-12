@@ -55,6 +55,12 @@ export SERPER_KEY_ID="${SERPER_KEY_ID:-YOUR_SERPER_API_KEY}"
 export TAVILY_API_KEY="${TAVILY_API_KEY:-YOUR_TAVILY_API_KEY}"
 # Search provider: 'serper' (default) or 'tavily'
 export SEARCH_PROVIDER="${SEARCH_PROVIDER:-serper}"
+# ============================================
+# E2B Sandbox Configuration (for llm_tool_openseeker_v2.py). 
+# ============================================
+# Get your API key from https://e2b.dev/. Used to create/connect remote Linux
+# sandboxes for create_sandbox, run_command, run_python_code, upload, download.
+export E2B_API_KEY="${E2B_API_KEY:-YOUR_E2B_API_KEY}"
 
 # ============================================
 # Other Configuration
@@ -66,18 +72,29 @@ export WEBCONTENT_MAXLENGTH="150000"
 # Tool log configuration
 export TOOL_LOG_MAX_CHARS="800"
 
+mask_secret() {
+    if [ -z "$1" ]; then
+        echo "<unset>"
+    elif [[ "$1" == YOUR_* ]]; then
+        echo "<placeholder>"
+    else
+        echo "<set>"
+    fi
+}
+
 echo "============================================"
 echo "OpenSeeker Environment Variables Set"
 echo "============================================"
 echo "OPENSEEKER_BASE_URL: $OPENSEEKER_BASE_URL"
 echo "OPENSEEKER_MODEL: $OPENSEEKER_MODEL"
 echo "SCORER_URLS: $SCORER_URLS"
-echo "SCORER_API_KEY: $SCORER_API_KEY"
+echo "SCORER_API_KEY: $(mask_secret "$SCORER_API_KEY")"
 echo "SUMMARY_MODEL_NAME: $SUMMARY_MODEL_NAME"
 echo "SUMMARY_API_URL: $SUMMARY_API_URL"
-echo "SUMMARY_API_KEY: ${SUMMARY_API_KEY:0:20}..."
-echo "JINA_API_KEYS: ${JINA_API_KEYS:0:20}..."
-echo "SERPER_KEY_ID: ${SERPER_KEY_ID:0:20}..."
-echo "TAVILY_API_KEY: ${TAVILY_API_KEY:0:20}..."
+echo "SUMMARY_API_KEY: $(mask_secret "$SUMMARY_API_KEY")"
+echo "JINA_API_KEYS: $(mask_secret "$JINA_API_KEYS")"
+echo "SERPER_KEY_ID: $(mask_secret "$SERPER_KEY_ID")"
+echo "TAVILY_API_KEY: $(mask_secret "$TAVILY_API_KEY")"
 echo "SEARCH_PROVIDER: $SEARCH_PROVIDER"
+echo "E2B_API_KEY: $(mask_secret "$E2B_API_KEY")"
 echo "============================================"

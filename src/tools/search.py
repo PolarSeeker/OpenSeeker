@@ -1,21 +1,20 @@
 import json
-from concurrent.futures import ThreadPoolExecutor
-from typing import List, Union
+import os
+from typing import List, Optional, Union
+
 import requests
 from qwen_agent.tools.base import BaseTool, register_tool
-import asyncio
-from typing import Dict, List, Optional, Union
-import uuid
-import http.client
-import json
-
-import os
 from tavily import TavilyClient
 
 
-SERPER_KEY=os.environ.get('SERPER_KEY_ID', "YOUR_SERPER_API_KEY")
-SEARCH_PROVIDER=os.environ.get('SEARCH_PROVIDER', 'serper')
-TAVILY_API_KEY=os.environ.get('TAVILY_API_KEY', '')
+SERPER_KEY = (
+    os.environ.get("SERPER_API_KEY")
+    or os.environ.get("SERPER_KEY_ID")
+    or "YOUR_SERPER_API_KEY"
+)
+SERPER_BASE_URL = (os.environ.get("SERPER_BASE_URL") or "https://google.serper.dev").rstrip("/")
+SEARCH_PROVIDER = os.environ.get("SEARCH_PROVIDER", "serper").strip().lower()
+TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY", "")
 
 
 @register_tool("search", allow_overwrite=True)
@@ -38,13 +37,13 @@ class Search(BaseTool):
 
     def __init__(self, cfg: Optional[dict] = None):
         super().__init__(cfg)
-    def google_search_with_serp(self, query: str):
-        # Hard-coded filter switch (not exposed as tool parameter).
-        filter_huggingface = False
+        cfg = cfg or {}
+        self.filter_huggingface = bool(cfg.get("filter_huggingface", False))
+        self.search_provider = str(cfg.get("search_provider") or SEARCH_PROVIDER or "serper").strip().lower()
 
+    def google_search_with_serp(self, query: str):
         def contains_chinese_basic(text: str) -> bool:
             return any('\u4E00' <= char <= '\u9FFF' for char in text)
-        conn = http.client.HTTPSConnection("google.serper.dev")
         if contains_chinese_basic(query):
             payload = json.dumps({
                 "q": query,
@@ -64,21 +63,29 @@ class Search(BaseTool):
                 'X-API-KEY': SERPER_KEY,
                 'Content-Type': 'application/json'
             }
-        
-        
+
         for i in range(5):
             try:
-                conn.request("POST", "/search", payload, headers)
-                res = conn.getresponse()
+                response = requests.post(
+                    f"{SERPER_BASE_URL}/search",
+                    data=payload,
+                    headers=headers,
+                    timeout=30,
+                )
                 break
             except Exception as e:
                 print(e)
                 if i == 4:
                     return f"Google search Timeout, return None, Please try again later."
                 continue
-    
-        data = res.read()
-        results = json.loads(data.decode("utf-8"))
+
+        try:
+            results = response.json()
+        except Exception:
+            results = {"message": response.text}
+        if response.status_code >= 400:
+            message = results.get("message") or results.get("error") or str(results)
+            return f"[Search] Serper API error {response.status_code}: {message}"
 
         try:
             if "organic" not in results:
@@ -89,7 +96,7 @@ class Search(BaseTool):
             if "organic" in results:
                 for page in results["organic"]:
                     link = str(page.get("link", ""))
-                    if filter_huggingface and ("huggingface" in link.lower()):
+                    if self.filter_huggingface and ("huggingface" in link.lower()):
                         continue
 
                     idx += 1
@@ -131,15 +138,21 @@ class Search(BaseTool):
 
             web_snippets = []
             for idx, result in enumerate(results, start=1):
+                url = str(result.get("url", ""))
+                if self.filter_huggingface and ("huggingface" in url.lower()):
+                    continue
+
                 title = result.get("title", "")
-                url = result.get("url", "")
                 content = result.get("content", "")
                 date_published = ""
                 if result.get("published_date"):
                     date_published = "\nDate published: " + result["published_date"]
 
-                redacted_version = f"{idx}. [{title}]({url}){date_published}\n{content}"
+                redacted_version = f"{len(web_snippets) + 1}. [{title}]({url}){date_published}\n{content}"
                 web_snippets.append(redacted_version)
+
+            if not web_snippets:
+                return f"No results found for '{query}'. Try with a more general query."
 
             content = f"### A Tavily search for '{query}' found {len(web_snippets)} results:\n\n" + "\n\n".join(web_snippets)
             return content
@@ -151,7 +164,7 @@ class Search(BaseTool):
         return result
 
     def _dispatch_search(self, query: str):
-        if SEARCH_PROVIDER == 'tavily':
+        if self.search_provider == "tavily":
             return self.search_with_tavily(query)
         return self.search_with_serp(query)
 
@@ -162,10 +175,8 @@ class Search(BaseTool):
             return "[Search] Invalid request format: Input must be a JSON object containing 'query' field"
         
         if isinstance(query, str):
-            # Single query
             response = self._dispatch_search(query)
         else:
-            # Multiple queries
             assert isinstance(query, List)
             responses = []
             for q in query:

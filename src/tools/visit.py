@@ -104,7 +104,6 @@ class Visit(BaseTool):
                 response.append(cur_response)
             response = "\n---\n".join(response)
         
-        # print(f'Summary Length {len(response)}; Summary Content {response}')
         return response.strip()
         
     def call_server(self, msgs, max_retries=2):
@@ -168,7 +167,6 @@ class Visit(BaseTool):
                     webpage_content = response.text
                     return webpage_content
                 else:
-                    # print(f"not 200: {response.status_code} {response.text}")
                     raise ValueError("jina readpage error")
             except Exception as e:
                 time.sleep(0.5)
@@ -255,12 +253,8 @@ class Visit(BaseTool):
             
             return useful_information
 
-        # If no valid content was obtained after all retries
         else:
             print(f"\033[91m[visit] Failed to visit the url: {url}\033[0m")
-            # useful_information = "The useful information in {url} for user goal {goal} as follows: \n\n".format(url=url, goal=goal)
-            # useful_information += "Evidence in page: \n" + "The provided webpage content could not be accessed. Please check the URL or file format." + "\n\n"
-            # useful_information += "Summary: \n" + "The webpage content could not be processed, and therefore, no information is available." + "\n\n"
             return f"[visit] Failed to visit the url: {url}"
 
 if __name__ == "__main__":
